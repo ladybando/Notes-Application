@@ -45,9 +45,5 @@ class EditTaskActivity : AppCompatActivity() {
             //userInput.text.clear()
             finish()
         }
-        binding.newSubmit.setOnClickListener {
-            viewModel.taskList.remove("Wash clothes")
-            finish()
-        }
     }
 }
