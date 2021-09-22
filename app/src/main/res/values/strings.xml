@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NotesApplication</string>
+    <string name="user_input_field">Enter text here</string>
+    <string name="submit">Submit</string>
+    <string name="sample_task">Sample task</string>
+    <string name="title">Notes Application</string>
+    <string name="affirmation">Are you sure you would like to delete?</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+</resources>
