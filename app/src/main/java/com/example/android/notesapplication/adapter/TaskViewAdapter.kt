@@ -1,41 +1,47 @@
 package com.example.android.notesapplication.adapter
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.notesapplication.EditTaskActivity
 import com.example.android.notesapplication.R
 import com.example.android.notesapplication.databinding.ListItemBinding
-import com.example.android.notesapplication.model.TaskViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-const val INTENT_DATA_NAME = "data"
 
-class TaskViewAdapter(private val context: Context, private val dataset: MutableList<String>, ) : RecyclerView.Adapter<TaskViewAdapter.TaskViewHolder>() {
+class TaskViewAdapter(val listener: Listener, private val context: Context) :
+    RecyclerView.Adapter<TaskViewAdapter.ViewHolder>() {
+    private var dataset = mutableListOf<String>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TaskViewHolder(binding)
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    inner class ViewHolder(binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val textView: TextView = binding.listOfItemsView
+
+        init {
+            // Define click listener for the ViewHolder's View.
+            textView.setOnClickListener {
+                listener.onTaskClicked(adapterPosition)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        with(holder) {
-            //gets position of text in RecyclerView List
-            binding.listOfItemsView.text = dataset[position]
+    // Create new views (invoked by the layout manager)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // Create a new view, which defines the UI of the list item
+        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
 
-            binding.listOfItemsView.setOnClickListener {
-                //creates intent passing data to [EditTask]
-                val intent = Intent(context, EditTaskActivity::class.java)
-                intent.putExtra(INTENT_DATA_NAME, dataset[position])
-                context.startActivity(intent)
-            }
-            binding.listOfItemsView.setOnLongClickListener {
-                //creates MaterialAlertDialog to verify if user wants to delete task
+    // Replace the contents of a view (invoked by the layout manager)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.textView.text = dataset[position]
+
+
+            holder.textView.setOnLongClickListener {
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.title)
                     .setMessage(R.string.affirmation)
@@ -50,10 +56,17 @@ class TaskViewAdapter(private val context: Context, private val dataset: Mutable
                     .show()
                 true
             }
-        }
     }
 
-    override fun getItemCount(): Int = dataset.size
+    // Return the size of your dataset (invoked by the layout manager)
+    override fun getItemCount() = dataset.size
 
-    class TaskViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    fun setTasks(listOfTask:MutableList<String>){
+        this.dataset = listOfTask
+        notifyDataSetChanged()
+    }
+
+    interface Listener{
+        fun onTaskClicked(index: Int)
+    }
 }

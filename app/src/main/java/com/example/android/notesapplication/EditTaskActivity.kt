@@ -4,45 +4,31 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
-import com.example.android.notesapplication.adapter.INTENT_DATA_NAME
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import com.example.android.notesapplication.databinding.ActivityEditTaskBinding
-import com.example.android.notesapplication.model.TaskViewModel
 
 class EditTaskActivity : AppCompatActivity() {
-
+    private lateinit var button: ImageButton
+    private lateinit var editText: EditText
     private lateinit var binding: ActivityEditTaskBinding
-    private val viewModel: TaskViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userInput = binding.editText
-        val dataFromMain = intent.getStringExtra(INTENT_DATA_NAME)
-        // Get the new task entered
-        userInput.setText(dataFromMain)
+        button = binding.submitEditButton
+        editText = binding.editText
+        val task = intent.getStringExtra(INTENT_DATA_NAME)
+        editText.setText(task)
 
-        binding.submitEditButton.setOnClickListener {
-            // set new user input from edit text to new variable
-            val editedUserInput = userInput.text.toString()
-            //create new intent instance
+        button.setOnClickListener {
             val intent = Intent()
-            //associates edited string to intent_data_name for use in [MainActivity]
-            intent.putExtra(INTENT_DATA_NAME, editedUserInput)
-            viewModel.editTask(editedUserInput)
-            //should send edited text to [MainActivity]
+            intent.putExtra(INDEX, this.intent.getIntExtra("taskIndex", 0))
+            intent.putExtra(INTENT_DATA_NAME, editText.text.toString())
             setResult(RESULT_OK, intent)
-            //other attempts to update text
-           // viewModel.taskList.set(0,"editedUserInput")
-           /* for (index in 0 until viewModel.taskList.size) {
-                //viewModel.taskList.get(index)
-
-                //viewModel.taskList[viewModel.taskList.indexOf(editedUserInput)]
-                //viewModel.taskList[index] = editedUserInput
-            }*/
-            //userInput.text.clear()
             finish()
         }
     }

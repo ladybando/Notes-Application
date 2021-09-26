@@ -1,47 +1,67 @@
 package com.example.android.notesapplication
 
-import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.android.notesapplication.adapter.INTENT_DATA_NAME
 import com.example.android.notesapplication.adapter.TaskViewAdapter
 import com.example.android.notesapplication.databinding.ActivityMainBinding
 import com.example.android.notesapplication.model.TaskViewModel
 
+const val INTENT_DATA_NAME = "data"
+const val INDEX = "TaskIndex"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TaskViewAdapter.Listener {
+    private val viewModel : TaskViewModel by viewModels()
+
+    private lateinit var button: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var editText: EditText
+    private lateinit var adapter: TaskViewAdapter
+
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: TaskViewModel by viewModels()
-
-    private var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        adapter = TaskViewAdapter(this, this)
+        button = binding.submitButton
         recyclerView = binding.recyclerView
-        val adapter = TaskViewAdapter(this, viewModel.taskList)
-        val userInput = binding.mainEditText
-        recyclerView?.adapter = adapter
-        recyclerView?.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        editText = binding.mainEditText
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        binding.submitButton.setOnClickListener {
-            val taskUserInput = userInput.text
-            // Get the new task entered
-            val newTask = taskUserInput.toString()
-            // Clear the EditText field
-            taskUserInput.clear()
-            //add string task to taskList in [ViewModel]
-            viewModel.taskList.add(newTask)
-            adapter.notifyItemChanged(viewModel.taskList.size - 1)
+        button.setOnClickListener {
+            viewModel.taskList.add(editText.text.toString())
+            adapter.setTasks(viewModel.taskList)
+            editText.setText("")
         }
-
     }
+
+    override fun onTaskClicked(index: Int) {
+        val intent = Intent(this, EditTaskActivity::class.java)
+        intent.putExtra(INDEX, index)
+        intent.putExtra(INTENT_DATA_NAME, viewModel.taskList[index])
+        startActivityForResult(intent, 101)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK){
+            data?.let {
+                val index = it.getIntExtra(INDEX, 0)
+                viewModel.taskList.removeAt(index)
+                viewModel.taskList.add(index,it.getStringExtra(INTENT_DATA_NAME)!!)
+                adapter.setTasks(viewModel.taskList)
+            }
+        }
+    }
+
 }
