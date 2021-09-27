@@ -25,9 +25,12 @@ class EditTaskActivity : AppCompatActivity() {
         editText.setText(task)
 
         button.setOnClickListener {
+            val newEditText = editText.text.toString()
             val intent = Intent()
-            intent.putExtra(INDEX, this.intent.getIntExtra("taskIndex", 0))
-            intent.putExtra(INTENT_DATA_NAME, editText.text.toString())
+
+            intent.putExtra(INTENT_DATA_NAME, newEditText)
+            editText.text.clear()
+
             setResult(RESULT_OK, intent)
             finish()
         }

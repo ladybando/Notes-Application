@@ -13,15 +13,13 @@ class TaskViewModel : ViewModel() {
     val inputString : String
     get() = _inputString
 
-    fun addNewTask(taskInput: String){
-        taskList.add(taskInput)
+    fun addEditTask(editInput: String){
+        for(index in 0 until taskList.size)
+            taskList[index] = editInput
     }
 
-    fun editTask(editInput: String){
-        for (index in 0 until taskList.size) {
-            _inputString = _taskList[index]
-            taskList[index] = editInput
-        }
+    fun returnTaskPosition() : Int{
+        return taskList.indexOf(_inputString)
     }
     fun removeTask(removeInput:String){
         taskList.remove(removeInput)

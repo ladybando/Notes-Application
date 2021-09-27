@@ -10,7 +10,7 @@ import com.example.android.notesapplication.databinding.ListItemBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
-class TaskViewAdapter(val listener: Listener, private val context: Context) :
+class TaskViewAdapter(private val listener: Listener, private val context: Context) :
     RecyclerView.Adapter<TaskViewAdapter.ViewHolder>() {
     private var dataset = mutableListOf<String>()
 

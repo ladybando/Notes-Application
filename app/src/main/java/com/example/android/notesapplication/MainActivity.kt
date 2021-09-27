@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.android.notesapplication.adapter.TaskViewAdapter
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), TaskViewAdapter.Listener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var editText: EditText
     private lateinit var adapter: TaskViewAdapter
-
+    var position = -1
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,19 +49,22 @@ class MainActivity : AppCompatActivity(), TaskViewAdapter.Listener {
         val intent = Intent(this, EditTaskActivity::class.java)
         intent.putExtra(INDEX, index)
         intent.putExtra(INTENT_DATA_NAME, viewModel.taskList[index])
-        startActivityForResult(intent, 101)
+        position = index
+        resultLauncher.launch(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK){
-            data?.let {
-                val index = it.getIntExtra(INDEX, 0)
-                viewModel.taskList.removeAt(index)
-                viewModel.taskList.add(index,it.getStringExtra(INTENT_DATA_NAME)!!)
-                adapter.setTasks(viewModel.taskList)
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+        if(result.resultCode == RESULT_OK){
+            val data: Intent? = result.data
+            if (data!= null){
+                val newUserInput = data.getStringExtra(INTENT_DATA_NAME)
+                if (newUserInput != null){
+                    viewModel.taskList[position] = newUserInput
+                    adapter.notifyItemChanged(viewModel.taskList.indexOf(newUserInput))
+                }
             }
         }
     }
+
 
 }
