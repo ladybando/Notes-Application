@@ -3,8 +3,6 @@ package com.example.android.notesapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import com.example.android.notesapplication.databinding.ActivityEditTaskBinding
@@ -21,8 +19,8 @@ class EditTaskActivity : AppCompatActivity() {
 
         button = binding.submitEditButton
         editText = binding.editText
-        val task = intent.getStringExtra(INTENT_DATA_NAME)
-        editText.setText(task)
+        val userInput = intent.getStringExtra(INTENT_DATA_NAME)
+        editText.setText(userInput)
 
         button.setOnClickListener {
             val newEditText = editText.text.toString()
