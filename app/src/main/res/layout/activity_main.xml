@@ -6,44 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/submit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="160dp"
-        android:text="@string/submit"
-        android:textColor="#FFEB3B"
-        android:textStyle="bold"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_edit_text"
-        tools:ignore="TextContrastCheck" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffe054"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/list_item" />
-
-    <EditText
-        android:id="@+id/main_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="144dp"
-        android:background="@drawable/back_with_shape"
-        android:fontFamily="@font/bad_script"
-        android:hint="@string/user_input_field"
-        android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        android:padding="8dp"
-        android:textColor="#FFEB3B"
-        android:textColorHint="#FFEB3B"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,10 +18,7 @@ class TaskViewModel : ViewModel() {
             taskList[index] = editInput
     }
 
-    fun returnTaskPosition() : Int{
-        return taskList.indexOf(_inputString)
-    }
-    fun removeTask(removeInput:String){
-        taskList.remove(removeInput)
+    fun removeTask(index: Int){
+        taskList.removeAt(index)
     }
 }
