@@ -3,19 +3,17 @@ package com.example.android.notesapplication.ui
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.android.notesapplication.R
 import com.example.android.notesapplication.adapter.TaskViewAdapter
-import com.example.android.notesapplication.databinding.FragmentTaskBinding
 import com.example.android.notesapplication.databinding.ListItemBinding
 import com.example.android.notesapplication.model.TaskViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,6 +25,7 @@ class TaskFragment : Fragment(), TaskViewAdapter.Listener {
     private lateinit var adapter: TaskViewAdapter
     private var _binding: ListItemBinding? = null
     private val binding get() = _binding!!
+    private val args: TaskFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +37,9 @@ class TaskFragment : Fragment(), TaskViewAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = TaskViewAdapter(this, this.requireActivity())
+
+        val tasksList = mutableListOf(args.newTask)
+        adapter = TaskViewAdapter(this, this.requireActivity(), tasksList)
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager =

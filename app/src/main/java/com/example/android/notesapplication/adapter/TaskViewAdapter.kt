@@ -9,10 +9,8 @@ import com.example.android.notesapplication.databinding.FragmentTaskBinding
 import com.example.android.notesapplication.databinding.ListItemBinding
 
 
-class TaskViewAdapter(val listener: Listener, private val context: Context) :
+class TaskViewAdapter(val listener: Listener, private val context: Context, private val dataset: MutableList<String?>) :
     RecyclerView.Adapter<TaskViewAdapter.ViewHolder>() {
-
-    private var dataset = mutableListOf<String>()
 
     /**
      * Provide a reference to the type of views that you are using
